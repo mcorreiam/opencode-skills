@@ -14,13 +14,14 @@ mantendo o formato padronizado do documento.
 
 ## Procedimento
 
-1. Localize o arquivo `OPENCODE_SETUP.md`. Procure, nesta ordem, no diretório
-   atual, nos diretórios pais até a raiz do workspace e em
-   `${HOME}/projects/OPENCODE_SETUP.md`. Leia o arquivo inteiro antes de
-   editar; nunca edite com base em leitura parcial.
+1. O arquivo canônico é `${HOME}/projects/opencode-skills/OPENCODE_SETUP.md`,
+   versionado no repositório GitHub `mcorreiam/opencode-skills`. Se não for
+   encontrado lá, procure no diretório atual e nos diretórios pais até a raiz
+   do workspace. Leia o arquivo inteiro antes de editar; nunca edite com base
+   em leitura parcial.
 2. Se o arquivo não existir, pergunte ao usuário se deseja criá-lo. Se ele
    recusar, pare sem criar nada. Se aceitar, crie o arquivo com o cabeçalho
-   base abaixo no local escolhido pelo usuário (padrão: raiz do workspace):
+   base abaixo em `${HOME}/projects/opencode-skills/`:
 
        # Setup do OpenCode
 
@@ -65,6 +66,9 @@ mantendo o formato padronizado do documento.
 7. Após gravar, releia o arquivo, confirme que a seção foi inserida no local
    correto, que a numeração está sequencial e que não há blocos de código
    abertos sem fechamento. Apresente ao usuário um resumo do que foi gravado.
+8. Como o arquivo vive no repositório `mcorreiam/opencode-skills`, ofereça ao
+   usuário commitar e publicar a alteração. Só execute commit/push com
+   confirmação explícita, incluindo apenas o arquivo `OPENCODE_SETUP.md`.
 
 ## Segurança
 
