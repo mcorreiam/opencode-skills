@@ -1,6 +1,6 @@
 ---
 name: save-setup-instructions
-description: Grava orientações de instalação e configuração no arquivo OPENCODE_SETUP.md, criando-o se não existir (com confirmação). Use quando o usuário pedir para gravar, salvar, registrar ou adicionar orientações/instruções/passos no OPENCODE_SETUP.md ou no arquivo de setup do OpenCode.
+description: Grava orientações de instalação e configuração no arquivo OPENCODE_SETUP.md, criando-o se não existir (com confirmação). Use quando o usuário pedir para gravar, salvar, registrar, adicionar ou atualizar orientações/instruções/passos/setup no OPENCODE_SETUP.md ou no arquivo de setup do OpenCode.
 compatibility: Requer acesso de escrita ao workspace e ao arquivo OPENCODE_SETUP.md.
 metadata:
   target_file: OPENCODE_SETUP.md
@@ -15,7 +15,8 @@ mantendo o formato padronizado do documento.
 ## Procedimento
 
 1. O arquivo canônico é `${HOME}/projects/opencode-skills/OPENCODE_SETUP.md`,
-   versionado no repositório GitHub `mcorreiam/opencode-skills`. Se não for
+   versionado no repositório GitHub `mcorreiam/opencode-skills`. Antes de
+   editar, faça `git pull` no repositório para evitar conflitos. Se não for
    encontrado lá, procure no diretório atual e nos diretórios pais até a raiz
    do workspace. Leia o arquivo inteiro antes de editar; nunca edite com base
    em leitura parcial.
@@ -67,7 +68,8 @@ mantendo o formato padronizado do documento.
    correto, que a numeração está sequencial e que não há blocos de código
    abertos sem fechamento. Apresente ao usuário um resumo do que foi gravado.
 8. Como o arquivo vive no repositório `mcorreiam/opencode-skills`, ofereça ao
-   usuário commitar e publicar a alteração. Só execute commit/push com
+   usuário commitar e publicar a alteração. Antes do commit, faça `git pull
+   --rebase` para sincronizar com o remoto. Só execute commit/push com
    confirmação explícita, incluindo apenas o arquivo `OPENCODE_SETUP.md`.
 
 ## Segurança
