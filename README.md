@@ -24,6 +24,7 @@ opencode-skills/
 | :--- | :--- |
 | `list-past-sessions` | Lista sessões anteriores do OpenCode em tabela Markdown (ID, nome, datas). |
 | `save-setup-instructions` | Grava novas orientações no `OPENCODE_SETUP.md`, criando-o se necessário. |
+| `flow-mattpocock` | Conduz demandas pelo pipeline das skills de Matt Pocock (classifica, roteia, preserva gates e invariantes). |
 
 ## Instalação
 
