@@ -13,7 +13,8 @@ invoca a skill certa via Skill tool, e garante gates e invariantes. Nunca pule u
 Verifique as skills disponíveis antes de rotear:
 
 - **Críticas** (produzem artefatos): `triage`, `to-spec`, `to-tickets`, `implement`,
-  `code-review`. Se alguma faltar → peça a instalação e pare.
+  `code-review`. Se alguma faltar → mostre a URL e o comando de instalação da seção
+  abaixo, peça a instalação e pare.
 - **Brandas** (disciplina/vocabulário): `grill-me`, `tdd`, `domain-modeling`,
   `codebase-design`, `setup-matt-pocock-skills`. Se alguma faltar → avise, degrade e siga:
   - `grill-me` → faça as perguntas de afiação inline
@@ -21,6 +22,24 @@ Verifique as skills disponíveis antes de rotear:
   - `domain-modeling` → registre termos no glossário que o repo usar
   - `codebase-design` → use o vocabulário module/interface/seam diretamente
   - `setup-matt-pocock-skills` → peça ao usuário para rodá-la antes de publicar no tracker
+
+## Referências das skills (upstream: https://github.com/mattpocock/skills)
+
+Instalação: `npx skills@latest add mattpocock/skills/<skill>` — ou o pacote
+completo com `npx skills@latest add mattpocock/skills`.
+
+| Skill | URL |
+|---|---|
+| `triage` | https://github.com/mattpocock/skills/tree/main/skills/engineering/triage |
+| `to-spec` | https://github.com/mattpocock/skills/tree/main/skills/engineering/to-spec |
+| `to-tickets` | https://github.com/mattpocock/skills/tree/main/skills/engineering/to-tickets |
+| `implement` | https://github.com/mattpocock/skills/tree/main/skills/engineering/implement |
+| `code-review` | https://github.com/mattpocock/skills/tree/main/skills/engineering/code-review |
+| `codebase-design` | https://github.com/mattpocock/skills/tree/main/skills/engineering/codebase-design |
+| `setup-matt-pocock-skills` | https://github.com/mattpocock/skills/tree/main/skills/engineering/setup-matt-pocock-skills |
+| `tdd` | https://github.com/mattpocock/skills/tree/main/skills/engineering/tdd |
+| `domain-modeling` | https://github.com/mattpocock/skills/tree/main/skills/engineering/domain-modeling |
+| `grill-me` | https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me |
 
 ## Passo 1 — Classificar
 
