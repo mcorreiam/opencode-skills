@@ -1,6 +1,6 @@
 ---
 name: flow-mattpocock
-description: Conduz uma demanda do início ao fim pelo pipeline das skills de Matt Pocock — classifica origem, ambiguidade e tamanho, e roteia para triage, grill-me, to-spec, to-tickets, implement, tdd e code-review, preservando gates humanos e invariantes. Use ao receber uma demanda nova, ao decidir qual skill invocar, ou quando pedirem "flow".
+description: Conduz uma demanda do início ao fim pelo pipeline das skills de Matt Pocock — classifica origem, ambiguidade e tamanho, e roteia para triage, grill-me/grill-with-docs, to-spec, to-tickets, implement, tdd e code-review, preservando gates humanos e invariantes. Use ao receber uma demanda nova, ao decidir qual skill invocar, ou quando pedirem "flow".
 ---
 
 # Flow — condutor do pipeline Matt Pocock
@@ -15,9 +15,12 @@ Verifique as skills disponíveis antes de rotear:
 - **Críticas** (produzem artefatos): `triage`, `to-spec`, `to-tickets`, `implement`,
   `code-review`. Se alguma faltar → mostre a URL e o comando de instalação da seção
   abaixo, peça a instalação e pare.
-- **Brandas** (disciplina/vocabulário): `grill-me`, `tdd`, `domain-modeling`,
-  `codebase-design`, `setup-matt-pocock-skills`. Se alguma faltar → avise, degrade e siga:
+- **Brandas** (disciplina/vocabulário): `grill-me`, `grill-with-docs`, `grilling`,
+  `tdd`, `domain-modeling`, `codebase-design`, `setup-matt-pocock-skills`.
+  Se alguma faltar → avise, degrade e siga:
   - `grill-me` → faça as perguntas de afiação inline
+  - `grill-with-docs` → degrade para `grill-me` (entrevista inline) + registre
+    decisões/termos no glossário do repo manualmente
   - `tdd` → aplique red-green nos seams (já coberto pela invariante 2)
   - `domain-modeling` → registre termos no glossário que o repo usar
   - `codebase-design` → use o vocabulário module/interface/seam diretamente
@@ -40,6 +43,7 @@ completo com `npx skills@latest add mattpocock/skills`.
 | `tdd` | https://github.com/mattpocock/skills/tree/main/skills/engineering/tdd |
 | `domain-modeling` | https://github.com/mattpocock/skills/tree/main/skills/engineering/domain-modeling |
 | `grill-me` | https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me |
+| `grill-with-docs` | https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs |
 
 ## Passo 1 — Classificar
 
@@ -52,10 +56,18 @@ completo com `npx skills@latest add mattpocock/skills`.
 | Origem | Ambiguidade | Tamanho | Rota |
 |---|---|---|---|
 | issue/PR externo | — | — | `triage` → lane humana (`ready-for-human`) ou agente (agent brief) |
-| conversa | vaga | — | `grill-me` → reclassificar |
+| conversa | vaga (dúvida pontual/trivial) | — | `grill-me` → reclassificar |
+| conversa | vaga (envolve termos de domínio OU decisão arquitetural difícil de reverter) | — | `grill-with-docs` → reclassificar (grill já gera ADR em `docs/adr/` + termos no glossário do repo) |
 | conversa | clara | grande | `to-spec` → `to-tickets` → `implement` → `code-review` → validação |
 | conversa | clara | pequena | `to-spec` → `implement` → `code-review` → validação |
 | conversa | clara | mínima | `implement` → `code-review` |
+
+**Critério grill-me vs grill-with-docs** (critério ADR): use `grill-with-docs` quando
+a ambiguidade envolver (a) termos de domínio conflitantes/sobrepostos, ou (b)
+decisão hard-to-reverse com trade-off real que um leitor futuro acharia surpreendente
+sem contexto. Caso contrário, `grill-me` basta. No repo fretes, o glossário vivo é o
+`AGENTS.md` (não CONTEXT.md) — `grill-with-docs` deve sincronizar termos lá e ADRs em
+`docs/adr/`.
 
 ## Passo 3 — Gates (pare e confirme com o usuário antes de prosseguir)
 
@@ -68,7 +80,8 @@ completo com `npx skills@latest add mattpocock/skills`.
 
 ## Invariantes (essência — nunca violar)
 
-1. `to-spec` nunca entrevista; `grill-me` é o único lugar de entrevista, e só se vago.
+1. `to-spec` nunca entrevista; entrevista só acontece no grill (`grill-me` ou
+   `grill-with-docs`, conforme critério do Passo 2), e só se vago.
 2. Seams são propostos no `to-spec` e usados no `tdd`; testes só em seams.
 3. Refatoração pertence ao `code-review`, nunca ao loop red-green.
 4. Nenhum código sem spec/brief/ticket rastreável.
