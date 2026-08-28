@@ -192,6 +192,48 @@ opencode debug skill
 
 O resultado deve conter `save-setup-instructions`.
 
+## 8. Skill evolution-api (WhatsApp Evolution API)
+
+Guia da Evolution API para webhooks, envio de mensagens e diagnostico. Inclui referencia detalhada em `references/evolution-api-reference.md`:
+
+```bash
+git clone --depth 1 https://github.com/mcorreiam/opencode-skills.git /tmp/opencode-skills
+mkdir -p ~/.config/opencode/skills
+cp -r /tmp/opencode-skills/skills/evolution-api ~/.config/opencode/skills/
+rm -rf /tmp/opencode-skills
+```
+
+Confirme o carregamento:
+
+```bash
+opencode debug skill
+```
+
+O resultado deve conter `evolution-api`. Valide a skill:
+
+```bash
+python3 ~/.config/opencode/skills/skill-architect/scripts/validate_skill.py ~/.config/opencode/skills/evolution-api
+```
+
+## 9. Skill flow-mattpocock (pipeline Matt Pocock)
+
+Conduz demandas pelo pipeline das skills de Matt Pocock — classifica origem, ambiguidade e tamanho e roteia para `triage`, `grill-me/grill-with-docs`, `to-spec`, `to-tickets`, `implement`, `tdd` e `code-review`:
+
+```bash
+git clone --depth 1 https://github.com/mcorreiam/opencode-skills.git /tmp/opencode-skills
+mkdir -p ~/.config/opencode/skills
+cp -r /tmp/opencode-skills/skills/flow-mattpocock ~/.config/opencode/skills/
+rm -rf /tmp/opencode-skills
+```
+
+Confirme o carregamento:
+
+```bash
+opencode debug skill
+```
+
+O resultado deve conter `flow-mattpocock`. Para o pipeline completo, instale tambem as skills `triage`, `to-spec`, `to-tickets`, `implement`, `code-review` via `npx skills@latest add mattpocock/skills/<skill>` — ver `skills/flow-mattpocock/SKILL.md` para tabela de URLs.
+
 ## Finalizacao
 
 Ao terminar, apresente um resumo do que foi instalado ou ja existia e avise o

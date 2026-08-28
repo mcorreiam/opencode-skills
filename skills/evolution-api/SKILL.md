@@ -1,8 +1,11 @@
 ---
 name: evolution-api
-description: Guia completo de uso da Evolution API para integração com WhatsApp. Configure webhooks, envie mensagens, resolva problemas comuns. Use quando o usuário precisar configurar, testar ou solucionar problemas com Evolution API e WhatsApp.
+description: 'Guia completo da Evolution API para WhatsApp — configure webhooks, envie mensagens e diagnostique erros. Use when user mentions Evolution API, WhatsApp webhook, sendText/sendMedia, or asks to configure/test Evolution (PT: Use quando precisar configurar, testar ou solucionar Evolution API e WhatsApp). Do NOT use for other WhatsApp providers (Twilio, Baileys) or generic HTTP APIs.'
+license: CC-BY-4.0
 compatibility: Requer acesso à Evolution API (self-hosted ou cloud) e ao projeto agente-whatsapp.
 metadata:
+  author: mcorreiam
+  version: 1.1.0
   provider: evolution-api
   protocol: webhook
 ---
@@ -11,6 +14,8 @@ metadata:
 
 Guia completo para configurar e usar a Evolution API com o projeto agente-whatsapp.
 Esta skill documenta padrões, armadilhas conhecidas e operações comuns.
+
+> Referência detalhada: quando precisar de lista completa de eventos, payloads exatos ou matriz estendida de diagnóstico, leia `references/evolution-api-reference.md` antes de chamar endpoints.
 
 ## Quando Usar
 
@@ -248,3 +253,34 @@ docker logs agente-whatsapp-worker-1 --tail 20
 | Listar instâncias | `GET /instance/fetchInstances` |
 | Configurar webhook | `POST /webhook/set/{instance}` |
 | Status conexão | `GET /instance/connectionState/{instance}` |
+
+## Examples
+
+### Example 1: Configurar webhook do zero
+
+User says: "Configura Evolution API para receber mensagens no agente-whatsapp"
+Actions:
+1. Verificar `.env` com `EVOLUTION_API_URL`, `EVOLUTION_API_KEY`, `INSTANCE_NAME`
+2. `curl POST /webhook/set/{instance}` com `{"webhook":{"enabled":true,"url":"http://ip:8081/webhook","events":["MESSAGES_UPSERT"]}}` + header `apikey`
+3. `curl GET /instance/fetchInstances` valida `connectionStatus=open`
+Result: Webhook ativo, evento `MESSAGES_UPSERT` configurado, mensagem de teste `MESSAGES_UPSERT` processada no adapter (porta 8081).
+
+### Example 2: Diagnosticar mensagem não processada
+
+User says: "Webhook retorna 200 mas mensagem não chega no worker"
+Actions:
+1. Checar `docker logs agente-whatsapp-adapter-1 --tail 20` + `curl http://localhost:8081/` (deve dar 404, não 502)
+2. Validar payload usa `data.messages` plural (não `data.message`) — ver armadilha 4
+3. Verificar `MESSAGES_UPSERT` em `events` (maiúsculas) e outbound queue `curl -H "Authorization: Bearer dev-token-local" http://localhost:8000/api/queue`
+Result: Causa identificada (campo singular), snippet `payload.get("data").get("messages")` corrigido no adapter.
+
+## Troubleshooting
+
+Ver `references/evolution-api-reference.md` para matriz completa de eventos e armadilhas. Casos rápidos:
+
+### Error: `webhook requires property "enabled"`
+
+Cause: Falta `enabled:true` no body
+Solution: Incluir `{"webhook":{"enabled":true, ...}}` — ver seção 4. `enabled` Ausente:156.
+
+Detalhes de referência e fluxo completo em `references/evolution-api-reference.md` (ler quando precisar de eventos válidos, formato de número ou diagnóstico avançado).

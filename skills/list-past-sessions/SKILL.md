@@ -1,8 +1,11 @@
 ---
 name: list-past-sessions
-description: Lista o histórico de sessões anteriores do OpenCode em uma tabela Markdown com ID, nome, data de início e data final. Use quando o usuário pedir histórico, sessões anteriores, conversas passadas ou listagem de sessões do OpenCode.
-compatibility: Requer opencode >= 0.8 com `opencode db` (primário, read-only). Fallback: Python 3 com módulo `sqlite3` em `?mode=ro`. Não requer binário `sqlite3`.
+description: 'Lista o histórico de sessões anteriores do OpenCode em tabela Markdown com ID, nome, data de início e data final. Use when user asks for history, past sessions, or "list sessions" (PT: Use quando pedir histórico, sessões anteriores, conversas passadas). Do NOT use for listing files, git history, or current session messages.'
+license: CC-BY-4.0
+compatibility: "Requer opencode >= 0.8 com `opencode db` (primário, read-only). Fallback: Python 3 com módulo `sqlite3` em `?mode=ro`. Não requer binário `sqlite3`."
 metadata:
+  author: mcorreiam
+  version: 1.1.0
   requested_name: list_past_sessions
   storage: sqlite
   scope: current|all
@@ -123,3 +126,45 @@ Quando houver sessões, preceda a tabela por um comentário HTML de contexto (n�
 - A tabela em si permanece estrita — sem introdução, explicação, bloco de código ou texto após ela.
 - Quando não houver sessões, a única exceção é a mensagem exata do passo 8.
 - Opcional para consumo por scripts: documente que `opencode db --format json "SELECT ..."` pode ser redirecionado para `SESSIONS.json` sem alterar a saída Markdown.
+
+## Examples
+
+### Example 1: scope=current (default)
+
+User says: "lista minhas sessões anteriores"
+Actions:
+1. `opencode db path` → `~/.local/share/opencode/opencode.db`
+2. `SELECT id, worktree FROM project` + `pwd` → `project.id` do worktree atual
+3. `opencode db --format json "SELECT ... WHERE s.project_id='<id>' ORDER BY time_final DESC LIMIT 50"` → 12 linhas
+4. `fmt_ts` com `astimezone()` → `26/08/2026 21:02`, escape `|` e truncar 120c
+Result:
+```markdown
+<!-- projeto:/home/marco/projects/opencode-skills (id 9c22...) — total:12 exibindo:12 scope:current limit:50 -->
+| ID | Nome da Sessão | Data de Início | Data Final |
+| :--- | :--- | :--- | :--- |
+| a1b2 | Fix login flow | 26/08/2026 19:00 | 26/08/2026 21:02 |
+```
+
+### Example 2: scope=all
+
+User says: "lista todas as sessões globais"
+Actions: Sem filtro `project_id`, `ORDER BY time_final DESC LIMIT 50` → 53 linhas misturadas incluindo `global` worktree="/"
+Result: Tabela com comentário `scope:all`, documenta que inclui sessões globais.
+
+### Example 3: Nenhuma sessão
+
+User says: "histórico deste projeto novo"
+Actions: `COUNT` filtrado = 0
+Result: `Nenhuma sessão de conversa anterior foi localizada.` (sem tabela)
+
+## Troubleshooting
+
+### Error: `bash: sqlite3: command not found`
+
+Cause: Tentou usar CLI `sqlite3` direto na VPS OCI ARM
+Solution: Usar exclusivamente `opencode db --format json "<SQL>"` (read-only). Só fallback para `python3 -c "import sqlite3"` com `?mode=ro` se `opencode db` indisponível. Nunca exigir binário `sqlite3`.
+
+### Error: datas com 3h de diferença
+
+Cause: Usou `utcfromtimestamp` ou `date -u`
+Solution: Sempre `datetime.fromtimestamp(v).astimezone()` e validar com `date +"%d/%m/%Y %H:%M"` vs `fmt_ts(1787788965056)`.

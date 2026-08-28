@@ -11,7 +11,13 @@ esperado pelo loader do OpenCode (`**/SKILL.md`):
 opencode-skills/
 ├── README.md
 ├── OPENCODE_SETUP.md          # guia de instalação do zero do OpenCode
+├── plugin/
+│   └── see-image.js           # vision bridge para modelos sem visão
 └── skills/
+    ├── evolution-api/
+    │   └── SKILL.md
+    ├── flow-mattpocock/
+    │   └── SKILL.md
     ├── list-past-sessions/
     │   └── SKILL.md
     └── save-setup-instructions/
@@ -22,9 +28,10 @@ opencode-skills/
 
 | Skill | Descrição |
 | :--- | :--- |
-| `list-past-sessions` | Lista sessões anteriores do OpenCode em tabela Markdown (ID, nome, datas). |
+| `evolution-api` | Guia da Evolution API para WhatsApp — webhooks, envio de mensagens e diagnóstico (com `references/evolution-api-reference.md`). |
+| `flow-mattpocock` | Conduz demandas pelo pipeline Matt Pocock (classifica, roteia, preserva gates e invariantes). |
+| `list-past-sessions` | Lista sessões anteriores do OpenCode em tabela Markdown (ID, nome, datas) — com `scope=current`/`all`. |
 | `save-setup-instructions` | Grava novas orientações no `OPENCODE_SETUP.md`, criando-o se necessário. |
-| `flow-mattpocock` | Conduz demandas pelo pipeline das skills de Matt Pocock (classifica, roteia, preserva gates e invariantes). |
 
 ## Instalação
 

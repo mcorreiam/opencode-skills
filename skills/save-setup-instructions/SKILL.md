@@ -1,8 +1,11 @@
 ---
 name: save-setup-instructions
-description: Grava orientações de instalação e configuração no arquivo OPENCODE_SETUP.md, criando-o se não existir (com confirmação). Use quando o usuário pedir para gravar, salvar, registrar, adicionar ou atualizar orientações/instruções/passos/setup no OPENCODE_SETUP.md ou no arquivo de setup do OpenCode.
+description: 'Grava orientações de instalação e configuração no arquivo OPENCODE_SETUP.md, criando-o se não existir (com confirmação). Use when user asks to save, record or update setup instructions in OPENCODE_SETUP.md (PT: Use quando pedir para gravar, salvar, registrar ou atualizar orientações no OPENCODE_SETUP.md). Do NOT use for editing README, other docs, or executing setup commands.'
+license: CC-BY-4.0
 compatibility: Requer acesso de escrita ao workspace e ao arquivo OPENCODE_SETUP.md.
 metadata:
+  author: mcorreiam
+  version: 1.1.0
   target_file: OPENCODE_SETUP.md
   storage: markdown
 ---
@@ -78,3 +81,45 @@ mantendo o formato padronizado do documento.
   arquivo, a menos que o usuário peça explicitamente para executar.
 - Não remova nem reescreva seções existentes ao adicionar uma nova, exceto
   quando estiver atualizando a seção correspondente ao tema pedido.
+
+## Examples
+
+### Example 1: Nova instrução (arquivo existe)
+
+User says: "Grava no OPENCODE_SETUP.md como instalar o Context7"
+Actions:
+1. `git pull` em `~/projects/opencode-skills`, ler `OPENCODE_SETUP.md` inteiro
+2. Próximo número = 8 (após 7 existente), inserir antes de `## Finalizacao`
+3. Escrever seção `## 8. Context7` com contexto + `jsonc` + validação `opencode mcp list`
+4. Releitura confirma numeração e blocos fechados
+Result: Seção 8 inserida, resumo apresentado, oferta de `commit` apenas de `OPENCODE_SETUP.md` após `git pull --rebase`.
+
+### Example 2: Atualizar seção existente
+
+User says: "Atualiza a seção 3 do OPENCODE_SETUP.md com novo caminho do plugin"
+Actions:
+1. Ler arquivo inteiro, localizar `## 3. Skill para listar sessões`
+2. Atualizar comando `cp -r` mantendo formato e estilo sem acentos
+3. Revalidar numeração sequencial e oferecer commit
+Result: Seção 3 atualizada no lugar, sem duplicação, blocos validados.
+
+### Example 3: Arquivo não existe
+
+User says: "Salva setup do Playwright no OPENCODE_SETUP.md"
+Actions:
+1. Não encontra arquivo em nenhum diretório pai
+2. Pergunta: "Deseja criar OPENCODE_SETUP.md em ~/projects/opencode-skills/?"
+3. Se sim, cria com cabeçalho base e adiciona `## 1. Playwright` + `## Finalizacao`
+Result: Arquivo criado com confirmação, sem sobrescrita silenciosa.
+
+## Troubleshooting
+
+### Error: numeração duplicada ou seção fora de ordem
+
+Cause: Leitura parcial ou inserção após `Finalizacao`
+Solution: Relê arquivo inteiro, recalcula próximo `## N.`, insere imediatamente antes de `## Finalizacao` e valida sequência.
+
+### Error: bloco de código não fecha
+
+Cause: Delimitador ``` ausente após edição
+Solution: Verificar balanceamento de todos os ```bash/jsonc, corrigir e releitura final antes de apresentar resumo.
