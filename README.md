@@ -14,12 +14,22 @@ opencode-skills/
 ├── plugin/
 │   └── see-image.js           # vision bridge para modelos sem visão
 └── skills/
+    ├── discovery/
+    │   ├── SKILL.md
+    │   └── templates.md
     ├── evolution-api/
-    │   └── SKILL.md
+    │   ├── SKILL.md
+    │   └── references/evolution-api-reference.md
     ├── flow-mattpocock/
     │   └── SKILL.md
+    ├── gsheets-edit/
+    │   ├── SKILL.md
+    │   ├── charts.md
+    │   ├── design.md
+    │   └── locale.md
     ├── list-past-sessions/
-    │   └── SKILL.md
+    │   ├── SKILL.md
+    │   └── scripts/
     └── save-setup-instructions/
         └── SKILL.md
 ```
@@ -28,8 +38,10 @@ opencode-skills/
 
 | Skill | Descrição |
 | :--- | :--- |
+| `discovery` | Conduz o discovery de produto e arquitetura via entrevista implacável (`grill-with-docs`), Navalha de Occam, Deep Modules (`codebase-design`) e `writing-for-agents` para gerar `README.md`, `ARQUITETURA.md` e `AGENTS.md` sincronizados. |
 | `evolution-api` | Guia da Evolution API para WhatsApp — webhooks, envio de mensagens e diagnóstico (com `references/evolution-api-reference.md`). |
 | `flow-mattpocock` | Conduz demandas pelo pipeline Matt Pocock (classifica, roteia, preserva gates e invariantes). |
+| `gsheets-edit` | Edita planilhas Google Sheets via REST API com `valueInputOption=USER_ENTERED`, formatação, tabelas, filtros e gráficos. |
 | `list-past-sessions` | Lista sessões anteriores do OpenCode em tabela Markdown (ID, nome, datas) — com `scope=current`/`all`. |
 | `save-setup-instructions` | Grava novas orientações no `OPENCODE_SETUP.md`, criando-o se necessário. |
 
