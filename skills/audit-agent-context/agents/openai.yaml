@@ -1,0 +1,3 @@
+interface:
+  display_name: "Audit Agent Context"
+  short_description: "Audit agent prompt and context engineering from trace + code"

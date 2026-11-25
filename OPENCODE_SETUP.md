@@ -234,6 +234,52 @@ opencode debug skill
 
 O resultado deve conter `flow-mattpocock`. Para o pipeline completo, instale tambem as skills `triage`, `to-spec`, `to-tickets`, `implement`, `code-review` via `npx skills@latest add mattpocock/skills/<skill>` — ver `skills/flow-mattpocock/SKILL.md` para tabela de URLs.
 
+## 10. Laboratorio WhatsApp Cloud API (WABA com CNPJ MEI - Robotizeme)
+
+Lab real de WABA para M05 (System User) e M06 (Graph API/Webhooks). Evita 3 armadilhas que quebram o envio mesmo com token aparentemente valido.
+
+Contexto: cria Portfolio com dados da Receita, App tipo Empresa com produto WhatsApp, numero de teste e System User long-lived para `POST /v25.0/<PHONE_NUMBER_ID>/messages`. Sem isso o lab fica em token temporario de 24h e falha `190`/`131030`.
+
+```bash
+# 1) Portfolio: business.facebook.com/settings/info
+#    Razao exata "66.334.562 MARCO CORREIA DE MAGALHAES", CNPJ 66.334.562/0001-80,
+#    endereco QNM 42 Conjunto F 27 - Taguatinga Norte - Brasilia/DF 72146-206,
+#    tel +55 61 98475-2323, site https://robotizeme.com.br, email admin@robotizeme.com.br
+#    Ative 2FA para Todos e verifique dominio via TXT DNS
+
+# 2) App: developers.facebook.com > Criar App > Empresa > adicionar WhatsApp
+#    -> Casos de uso > Conectar no WhatsApp > Etapa 1 Experimente
+#    Anote: WABA_ID, PHONE_NUMBER_ID (+1 555 659-0046 teste) e TOKEN_TEMP (24h)
+#    Destinatario: adicione seu numero em "Gerenciar lista de numeros" (max 5) e confirme SMS
+
+# 3) System User long-lived: business.facebook.com/settings > Usuarios do sistema
+#    Criar Funcionario robotizeme-system
+#    Atribuir ATIVOS: Contas do WhatsApp > Test WABA + Apps > Robotizeme app (Gerenciar app - Acesso total)
+#    Sem os dois ativos, Gerar token falha "Nenhuma permissao disponivel"
+#    Gerar token > App Robotizeme app > expiracao Nunca > scopes whatsapp_business_messaging, whatsapp_business_management, business_management
+```
+
+Instrucoes de validacao, quando aplicavel:
+
+```bash
+source /tmp/robotizeme.env  # PORTFOLIO_ID, WABA_ID, PHONE_NUMBER_ID, TENANT_TOKEN, TENANT_TOKEN_TEMP
+# .env deve ter chaves sem espaco (PORTFOLIO_ID, nao "PORTFOLIO ID") e chmod 600
+chmod 600 /tmp/robotizeme.env
+
+# deve retornar 200 com template jaspers_market_order_confirmation_v1
+curl -s "https://graph.facebook.com/v25.0/$WABA_ID/message_templates?limit=1" -H "Authorization: Bearer $TENANT_TOKEN" | jq .data[0].name
+
+# deve retornar robotizeme-system e id
+curl -s "https://graph.facebook.com/v25.0/me?access_token=$TENANT_TOKEN" | jq .
+
+# deve retornar 200 com wamid e wa_id (ex: 556184752329)
+curl -s -X POST "https://graph.facebook.com/v25.0/$PHONE_NUMBER_ID/messages" \
+  -H "Authorization: Bearer $TENANT_TOKEN" -H "Content-Type: application/json" \
+  -d '{"messaging_product":"whatsapp","to":"5561984752329","type":"template","template":{"name":"hello_world","language":{"code":"en_US"}}}' | jq .
+```
+
+Resultado esperado da validacao: `message_templates` com `UTILITY APPROVED`, `me` com `name robotizeme-system`, `POST messages` com `message_status accepted` e `wamid.*`. Erros comuns: `(#131030) not in allowed list` = falta allowlist do destinatario; `190 Authentication Error` / `TOKEN len 0` = .env com espaco na chave ou token truncado; `Nenhuma permissao` = esqueceu de atribuir Apps > Gerenciar app ao System User.
+
 ## Finalizacao
 
 Ao terminar, apresente um resumo do que foi instalado ou ja existia e avise o
