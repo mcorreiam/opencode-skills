@@ -1,10 +1,10 @@
 ---
 name: discovery
-description: 'Product and architecture discovery via relentless grilling, Occam''s Razor, and Deep Modules to produce README.md, ARQUITETURA.md, and AGENTS.md. Use when starting a new project, reshaping product scope and architecture, or running discovery before specs and code (PT: Use para conduzir discovery de produto e arquitetura gerando README.md, ARQUITETURA.md e AGENTS.md).'
+description: 'Product and architecture discovery via relentless grilling, Occam''s Razor, and Deep Modules to produce README.md, ARQUITETURA.md, and AGENTS.md. Use when starting a new project (greenfield), auditing and reshaping an existing codebase (brownfield), or running discovery before specs and code (PT: Use para conduzir discovery greenfield ou auditoria arquitetural brownfield gerando README.md, ARQUITETURA.md e AGENTS.md).'
 license: CC-BY-4.0
 metadata:
   author: mcorreiam
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # Discovery — Produto, Arquitetura (Occam + Deep Modules) e AGENTS.md
@@ -27,9 +27,15 @@ Quando precisar da estrutura detalhada e seção por seção de cada um dos 3 ar
 
 ### 1. Reconhecimento do Ambiente e Referências
 
-Antes de fazer perguntas ao usuário, explore o diretório atual e quaisquer projetos de referência ou homologação mencionados. Levante fatos que o código ou ambiente já respondem: APIs usadas, schemas, fórmulas validadas e armadilhas conhecidas.
+Explore o diretório atual e quaisquer projetos de referência ou homologação mencionados antes de formular perguntas. Levante fatos que o código ou ambiente já respondem: APIs usadas, schemas, fórmulas validadas e armadilhas conhecidas.
 
-Done when: fatos existentes no filesystem ou repositório de referência foram levantados sem perguntar ao usuário o que você mesmo podia inspecionar.
+- **Ramo *Greenfield* (sem código de aplicação):** mantenha o reconhecimento enxuto, focando apenas no ambiente, restrições e referências fornecidas.
+- **Ramo *Brownfield* (com código implementado em `src/`, rotas ou persistência):** carregue sob demanda `codebase-design` (e `DEEPENING.md`) ou `improve-codebase-architecture` para aplicar o vocabulário (*module*, *interface*, *depth*, *seam*, *adapter*, *leverage*, *locality*) e o *deletion test*. Execute uma varredura factual (preferencialmente via subagente `research`) verificando 3 frentes:
+  1. **Deep Modules & *Seam Discipline*:** módulos rasos (*deletion test*), lógica de negócio ou queries SQL vazando nos entrypoints, regras duplicadas entre interfaces (ex.: HTTP vs MCP/CLI), *adapters* contornados (*bypass*) e *seams* abertas na borda sem fechamento na execução.
+  2. **Navalha de Occam:** parâmetros validados e descartados, funções *pass-through* sem valor, código morto sem chamadores, fallbacks ausentes em fronteiras externas e violações de *Single Source of Truth*.
+  3. **Batimento de *Drift* Documental:** divergências entre `README.md`, contratos internos (`src/**/README.md`), specs (`docs/specs/`), glossário (`GLOSSARY.md`) e ADRs (`docs/adr/`) versus a implementação real.
+
+Done when: fatos do ambiente e, em projetos *brownfield*, inventário com arquivo e linha de cada fricção arquitetural (Occam/Deep Modules) e *drift* documental foram levantados sem perguntar ao usuário o que podia ser inspecionado.
 
 ### 2. Grilling por Rodadas (Design Tree + Navalha de Occam)
 
@@ -48,7 +54,12 @@ Ao longo das rodadas, feche obrigatoriamente estas 5 dimensões:
 4. **Portas de Entrega para o Cliente:** Quais são os pacotes prontos de leitura que o sistema serve para que o cliente/celular apenas exiba dados mastigados?
 5. **Invariantes de Domínio (Gotchas Críticos):** Quais são as regras de negócio inegociáveis, janelas temporais exatas e armadilhas de dados externos que nunca podem ser violadas?
 
-Done when: a frontier da design tree está vazia e o usuário confirmou o entendimento compartilhado das 5 dimensões.
+- **Encaminhamento *Brownfield*:** quando o Step 1 encontrar fricções arquiteturais ou *drifts*, inclua na **frontier** da *design tree* uma questão explícita com recomendação opinativa (`➡️`) para o usuário escolher o destino dos achados:
+  - **Apenas documentar (*as-is*):** registrar o funcionamento atual nos 3 artefatos raiz.
+  - **Documentar + Planejar Refatoração (`/plan`):** consolidar `README.md`, `ARQUITETURA.md` e `AGENTS.md` e gerar um plano paralelo de refatoração em *Deep Modules* + sincronização de docs internos.
+  - **Registrar exceção intencional (ADR):** preservar o desenho atual e documentar a razão em `docs/adr/`.
+
+Done when: a frontier da design tree está vazia e o usuário confirmou o entendimento compartilhado das 5 dimensões (e do encaminhamento *brownfield*, quando aplicável).
 
 ### 3. Redigir `README.md` (Pedido de Produto)
 
@@ -89,6 +100,7 @@ Faça um batimento linha a linha entre os 3 arquivos (se estiver em ambiente mul
 2. **Corte de Fios Soltos (Occam):** Existe alguma fonte ou metadado citado num diagrama que não tem pipeline/Plano B ou não ajuda na decisão do usuário? Se sim, corte dos dois.
 3. **Unicidade de Regras e Limiares:** As janelas temporais, fórmulas e regras dos invariantes são idênticas em `README.md`, `ARQUITETURA.md` e `AGENTS.md` (sem números órfãos)?
 4. **Single Source of Truth e Imutabilidade:** Está claro qual módulo calcula cada indicador e como os snapshots evitam perda/sobrescrita de dados históricos?
+5. **Coerência *Brownfield* (Contratos Internos e ADRs):** Em projetos com código existente, os 3 artefatos raiz estão coerentes com o estado dos contratos internos (`src/**/README.md`), specs e `docs/adr/`, e os itens encaminhados ao plano paralelo de refatoração (quando escolhido no Step 2) estão explicitamente listados?
 
 Apresente a tabela de cruzamento ao usuário e aplique os ajustes finais nos 3 arquivos.
 
